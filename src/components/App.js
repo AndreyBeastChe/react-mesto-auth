@@ -34,22 +34,22 @@ function App() {
   const [isInfoTooltipOpen, setIsInfoTooltipOpen] = React.useState(false);
 
   React.useEffect(() => {
-    api
-      .getUser()
-      .then((user) => {
-        setCurrentUser(user);
-      })
-      .catch((err) => console.log("Ошибка получения пользователя" + err));
-  }, []);
+    if (loggedIn) {
+      api
+        .getUser()
+        .then((user) => {
+          setCurrentUser(user);
+        })
+        .catch((err) => console.log("Ошибка получения пользователя" + err));
 
-  React.useEffect(() => {
-    api
-      .gerCards()
-      .then((cards) => {
-        setCards(cards.reverse());
-      })
-      .catch((err) => console.log("Ошибка получения карточек" + err));
-  }, []);
+      api
+        .gerCards()
+        .then((cards) => {
+          setCards(cards.reverse());
+        })
+        .catch((err) => console.log("Ошибка получения карточек" + err));
+    }
+  }, [loggedIn]);
 
   function handleEditProfileClick() {
     setIsEditProfilePopupOpen(true);
@@ -158,6 +158,8 @@ function App() {
         history.push("/");
       })
       .catch((err) => {
+        setState(false);
+        setIsInfoTooltipOpen(true);
         console.log("Ошибка авторизации" + err);
       });
   }
